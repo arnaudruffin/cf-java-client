@@ -16,6 +16,7 @@
 
 package org.cloudfoundry.client.v3;
 
+import lombok.Builder;
 import org.cloudfoundry.client.ValidationResult;
 import org.junit.Test;
 
@@ -24,20 +25,11 @@ import static org.junit.Assert.assertEquals;
 public final class PaginatedRequestTest {
 
     @Test
-    public void test() {
-        StubPaginatedRequest request = new StubPaginatedRequest()
-                .withPage(-1)
-                .withPerPage(-2);
-
-        assertEquals(Integer.valueOf(-1), request.getPage());
-        assertEquals(Integer.valueOf(-2), request.getPerPage());
-    }
-
-    @Test
     public void isPaginationRequestValid() {
-        ValidationResult result = new StubPaginatedRequest()
-                .withPage(10)
-                .withPerPage(10)
+        ValidationResult result = StubPaginatedRequest.builder()
+                .page(10)
+                .perPage(10)
+                .build()
                 .isPaginatedRequestValid();
 
         assertEquals(ValidationResult.Status.VALID, result.getStatus());
@@ -45,7 +37,8 @@ public final class PaginatedRequestTest {
 
     @Test
     public void isPaginationRequestValidNull() {
-        ValidationResult result = new StubPaginatedRequest()
+        ValidationResult result = StubPaginatedRequest.builder()
+                .build()
                 .isPaginatedRequestValid();
 
         assertEquals(ValidationResult.Status.VALID, result.getStatus());
@@ -53,8 +46,9 @@ public final class PaginatedRequestTest {
 
     @Test
     public void isPaginationRequestValidZeroPage() {
-        ValidationResult result = new StubPaginatedRequest()
-                .withPage(0)
+        ValidationResult result = StubPaginatedRequest.builder()
+                .page(0)
+                .build()
                 .isPaginatedRequestValid();
 
         assertEquals(ValidationResult.Status.INVALID, result.getStatus());
@@ -63,8 +57,9 @@ public final class PaginatedRequestTest {
 
     @Test
     public void isPaginationRequestValidZeroPerPage() {
-        ValidationResult result = new StubPaginatedRequest()
-                .withPerPage(0)
+        ValidationResult result = StubPaginatedRequest.builder()
+                .perPage(0)
+                .build()
                 .isPaginatedRequestValid();
 
         assertEquals(ValidationResult.Status.INVALID, result.getStatus());
@@ -73,15 +68,22 @@ public final class PaginatedRequestTest {
 
     @Test
     public void isPaginationRequestValidExcessivePerPage() {
-        ValidationResult result = new StubPaginatedRequest()
-                .withPerPage(10_000)
+        ValidationResult result = StubPaginatedRequest.builder()
+                .perPage(10_000)
+                .build()
                 .isPaginatedRequestValid();
 
         assertEquals(ValidationResult.Status.INVALID, result.getStatus());
         assertEquals("perPage must be between 1 and 5000 inclusive", result.getMessages().get(0));
     }
 
-    private static final class StubPaginatedRequest extends PaginatedRequest<StubPaginatedRequest> {
+    private static final class StubPaginatedRequest extends PaginatedRequest {
+
+        @Builder
+        private StubPaginatedRequest(Integer page, Integer perPage) {
+            super(page, perPage);
+        }
+
     }
 
 }

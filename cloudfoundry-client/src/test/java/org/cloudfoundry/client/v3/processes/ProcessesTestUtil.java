@@ -28,8 +28,8 @@ final class ProcessesTestUtil {
 
     static <T extends Process<T>> void test(Process<T> response) {
         Map<String, Link> links = new HashMap<>();
-        links.put("test-link-1", new Link());
-        links.put("test-link-2", new Link());
+        links.put("test-link-1", Link.builder().build());
+        links.put("test-link-2", Link.builder().build());
 
         response.withCreatedAt("test-created-at")
                 .withCommand("test-command")

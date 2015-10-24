@@ -34,11 +34,12 @@ public final class StagePackageResponseTest {
         environmentVariables.put("test-key-1", "test-value-1");
         environmentVariables.put("test-key-2", "test-value-2");
 
-        Hash hash = new Hash();
+        Hash hash = Hash.builder()
+                .build();
 
         Map<String, Link> links = new HashMap<>();
-        links.put("test-link-1", new Link());
-        links.put("test-link-2", new Link());
+        links.put("test-link-1", Link.builder().build());
+        links.put("test-link-2", Link.builder().build());
 
         StagePackageResponse response = new StagePackageResponse()
                 .withBuildpack("test-buildpack")

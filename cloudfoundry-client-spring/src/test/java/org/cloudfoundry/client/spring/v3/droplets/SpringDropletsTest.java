@@ -48,8 +48,9 @@ public final class SpringDropletsTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/droplets/test-id")
                 .status(NO_CONTENT));
 
-        DeleteDropletRequest request = new DeleteDropletRequest()
-                .withId("test-id");
+        DeleteDropletRequest request = DeleteDropletRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.droplets.delete(request)).next().get();
 
@@ -62,15 +63,16 @@ public final class SpringDropletsTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/droplets/test-id")
                 .errorResponse());
 
-        DeleteDropletRequest request = new DeleteDropletRequest()
-                .withId("test-id");
+        DeleteDropletRequest request = DeleteDropletRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.droplets.delete(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void deleteInvalidRequest() {
-        Streams.wrap(this.droplets.delete(new DeleteDropletRequest())).next().get();
+        Streams.wrap(this.droplets.delete(DeleteDropletRequest.builder().build())).next().get();
     }
 
     @Test
@@ -80,8 +82,9 @@ public final class SpringDropletsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/droplets/GET_{id}_response.json"));
 
-        GetDropletRequest request = new GetDropletRequest()
-                .withId("test-id");
+        GetDropletRequest request = GetDropletRequest.builder()
+                .id("test-id")
+                .build();
 
         GetDropletResponse response = Streams.wrap(this.droplets.get(request)).next().get();
 
@@ -105,15 +108,16 @@ public final class SpringDropletsTest extends AbstractRestTest {
                 .method(GET).path("/v3/droplets/test-id")
                 .errorResponse());
 
-        GetDropletRequest request = new GetDropletRequest()
-                .withId("test-id");
+        GetDropletRequest request = GetDropletRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.droplets.get(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void getInvalidRequest() {
-        Streams.wrap(this.droplets.get(new GetDropletRequest())).next().get();
+        Streams.wrap(this.droplets.get(GetDropletRequest.builder().build())).next().get();
     }
 
     @Test
@@ -123,7 +127,9 @@ public final class SpringDropletsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/droplets/GET_response.json"));
 
-        ListDropletsRequest request = new ListDropletsRequest();
+        ListDropletsRequest request = ListDropletsRequest.builder()
+                .build();
+
         ListDropletsResponse response = Streams.wrap(this.droplets.list(request)).next().get();
 
         Map<String, Object> environmentVariables = new HashMap<>();
@@ -151,14 +157,15 @@ public final class SpringDropletsTest extends AbstractRestTest {
                 .method(GET).path("/v3/droplets")
                 .errorResponse());
 
-        ListDropletsRequest request = new ListDropletsRequest();
+        ListDropletsRequest request = ListDropletsRequest.builder()
+                .build();
 
         Streams.wrap(this.droplets.list(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void listInvalidRequest() {
-        Streams.wrap(this.droplets.list(new ListDropletsRequest().withPage(0))).next().get();
+        Streams.wrap(this.droplets.list(ListDropletsRequest.builder().page(0).build())).next().get();
     }
 
     public Map<String, Object> getExpectedEnvironmentVariables() {

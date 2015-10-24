@@ -62,9 +62,10 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/POST_{id}_packages_response.json"));
 
-        CopyPackageRequest request = new CopyPackageRequest()
-                .withApplicationId("test-application-id")
-                .withSourcePackageId("test-source-package-id");
+        CopyPackageRequest request = CopyPackageRequest.builder()
+                .applicationId("test-application-id")
+                .sourcePackageId("test-source-package-id")
+                .build();
 
         CopyPackageResponse response = Streams.wrap(this.packages.copy(request)).next().get();
 
@@ -87,16 +88,17 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .method(POST).path("/v3/apps/test-application-id/packages?source_package_guid=test-source-package-id")
                 .errorResponse());
 
-        CopyPackageRequest request = new CopyPackageRequest()
-                .withApplicationId("test-application-id")
-                .withSourcePackageId("test-source-package-id");
+        CopyPackageRequest request = CopyPackageRequest.builder()
+                .applicationId("test-application-id")
+                .sourcePackageId("test-source-package-id")
+                .build();
 
         Streams.wrap(this.packages.copy(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void copyInvalidRequest() {
-        Streams.wrap(this.packages.copy(new CopyPackageRequest())).next().get();
+        Streams.wrap(this.packages.copy(CopyPackageRequest.builder().build())).next().get();
     }
 
     @Test
@@ -107,10 +109,11 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .status(CREATED)
                 .responsePayload("v3/apps/POST_{id}_packages_response.json"));
 
-        CreatePackageRequest request = new CreatePackageRequest()
-                .withApplicationId("test-application-id")
-                .withType(DOCKER)
-                .withUrl("docker://cloudfoundry/runtime-ci");
+        CreatePackageRequest request = CreatePackageRequest.builder()
+                .applicationId("test-application-id")
+                .type(DOCKER)
+                .url("docker://cloudfoundry/runtime-ci")
+                .build();
 
         CreatePackageResponse response = Streams.wrap(this.packages.create(request)).next().get();
 
@@ -134,17 +137,18 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .requestPayload("v3/apps/POST_{id}_packages_request.json")
                 .errorResponse());
 
-        CreatePackageRequest request = new CreatePackageRequest()
-                .withApplicationId("test-application-id")
-                .withType(DOCKER)
-                .withUrl("docker://cloudfoundry/runtime-ci");
+        CreatePackageRequest request = CreatePackageRequest.builder()
+                .applicationId("test-application-id")
+                .type(DOCKER)
+                .url("docker://cloudfoundry/runtime-ci")
+                .build();
 
         Streams.wrap(this.packages.create(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void createInvalidRequest() {
-        Streams.wrap(this.packages.create(new CreatePackageRequest())).next().get();
+        Streams.wrap(this.packages.create(CreatePackageRequest.builder().build())).next().get();
     }
 
     @Test
@@ -153,8 +157,9 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/packages/test-id")
                 .status(OK));
 
-        DeletePackageRequest request = new DeletePackageRequest()
-                .withId("test-id");
+        DeletePackageRequest request = DeletePackageRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.packages.delete(request)).next().get();
 
@@ -167,15 +172,16 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/packages/test-id")
                 .errorResponse());
 
-        DeletePackageRequest request = new DeletePackageRequest()
-                .withId("test-id");
+        DeletePackageRequest request = DeletePackageRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.packages.delete(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void deleteInvalidRequest() {
-        Streams.wrap(this.packages.delete(new DeletePackageRequest())).next().get();
+        Streams.wrap(this.packages.delete(DeletePackageRequest.builder().build())).next().get();
     }
 
     @Test
@@ -185,8 +191,9 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/packages/GET_{id}_response.json"));
 
-        GetPackageRequest request = new GetPackageRequest()
-                .withId("test-id");
+        GetPackageRequest request = GetPackageRequest.builder()
+                .id("test-id")
+                .build();
 
         GetPackageResponse response = Streams.wrap(this.packages.get(request)).next().get();
 
@@ -209,15 +216,16 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .method(GET).path("/v3/packages/test-id")
                 .errorResponse());
 
-        GetPackageRequest request = new GetPackageRequest()
-                .withId("test-id");
+        GetPackageRequest request = GetPackageRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.packages.get(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void getInvalidRequest() {
-        Streams.wrap(this.packages.get(new GetPackageRequest())).next().get();
+        Streams.wrap(this.packages.get(GetPackageRequest.builder().build())).next().get();
     }
 
     @Test
@@ -227,7 +235,8 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/packages/GET_response.json"));
 
-        ListPackagesRequest request = new ListPackagesRequest();
+        ListPackagesRequest request = ListPackagesRequest.builder()
+                .build();
         ListPackagesResponse response = Streams.wrap(this.packages.list(request)).next().get();
 
         ListPackagesResponse.Resource resource = response.getResources().get(0);
@@ -251,14 +260,15 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .method(GET).path("/v3/packages")
                 .errorResponse());
 
-        ListPackagesRequest request = new ListPackagesRequest();
+        ListPackagesRequest request = ListPackagesRequest.builder()
+                .build();
 
         Streams.wrap(this.packages.list(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void listInvalidRequest() {
-        Streams.wrap(this.packages.list(new ListPackagesRequest().withPage(0))).next().get();
+        Streams.wrap(this.packages.list(ListPackagesRequest.builder().page(0).build())).next().get();
     }
 
     @Test
@@ -269,11 +279,12 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .status(CREATED)
                 .responsePayload("v3/packages/POST_{id}_droplets_response.json"));
 
-        StagePackageRequest request = new StagePackageRequest()
-                .withBuildpack("http://github.com/myorg/awesome-buildpack")
-                .withEnvironmentVariable("CUSTOM_ENV_VAR", "hello")
-                .withId("test-id")
-                .withStack("cflinuxfs2");
+        StagePackageRequest request = StagePackageRequest.builder()
+                .buildpack("http://github.com/myorg/awesome-buildpack")
+                .environmentVariable("CUSTOM_ENV_VAR", "hello")
+                .id("test-id")
+                .stack("cflinuxfs2")
+                .build();
 
         StagePackageResponse response = Streams.wrap(this.packages.stage(request)).next().get();
 
@@ -298,18 +309,19 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .requestPayload("v3/packages/POST_{id}_droplets_request.json")
                 .errorResponse());
 
-        StagePackageRequest request = new StagePackageRequest()
-                .withBuildpack("http://github.com/myorg/awesome-buildpack")
-                .withEnvironmentVariable("CUSTOM_ENV_VAR", "hello")
-                .withId("test-id")
-                .withStack("cflinuxfs2");
+        StagePackageRequest request = StagePackageRequest.builder()
+                .buildpack("http://github.com/myorg/awesome-buildpack")
+                .environmentVariable("CUSTOM_ENV_VAR", "hello")
+                .id("test-id")
+                .stack("cflinuxfs2")
+                .build();
 
         Streams.wrap(this.packages.stage(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void stageInvalidRequest() {
-        Streams.wrap(this.packages.stage(new StagePackageRequest())).next().get();
+        Streams.wrap(this.packages.stage(StagePackageRequest.builder().build())).next().get();
     }
 
     @Test
@@ -321,9 +333,10 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .status(CREATED)
                 .responsePayload("v3/packages/POST_{id}_upload_response.json"));
 
-        UploadPackageRequest request = new UploadPackageRequest()
-                .withFile(new ClassPathResource("v3/packages/test-file").getFile())
-                .withId("test-id");
+        UploadPackageRequest request = UploadPackageRequest.builder()
+                .file(new ClassPathResource("v3/packages/test-file").getFile())
+                .id("test-id")
+                .build();
 
         UploadPackageResponse response = Streams.wrap(this.packages.upload(request)).next().get();
 
@@ -348,16 +361,17 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .anyRequestPayload()
                 .errorResponse());
 
-        UploadPackageRequest request = new UploadPackageRequest()
-                .withFile(new ClassPathResource("v3/packages/test-file").getFile())
-                .withId("test-id");
+        UploadPackageRequest request = UploadPackageRequest.builder()
+                .file(new ClassPathResource("v3/packages/test-file").getFile())
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.packages.upload(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void uploadInvalidRequest() {
-        Streams.wrap(this.packages.upload(new UploadPackageRequest())).next().get();
+        Streams.wrap(this.packages.upload(UploadPackageRequest.builder().build())).next().get();
     }
 
 }

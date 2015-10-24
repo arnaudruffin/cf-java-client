@@ -28,10 +28,10 @@ public final class PaginatedResponseTest {
 
     @Test
     public void test() {
-        Link first = new Link();
-        Link last = new Link();
-        Link next = new Link();
-        Link previous = new Link();
+        Link first = Link.builder().build();
+        Link last = Link.builder().build();
+        Link next = Link.builder().build();
+        Link previous = Link.builder().build();
 
         Pagination pagination = new Pagination()
                 .withFirst(first)

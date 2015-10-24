@@ -37,9 +37,10 @@ final class ApplicationsTestUtil {
 
 
     static Hash getHash() {
-        Hash hash = new Hash()
-                .withType("test-type")
-                .withValue("test-value");
+        Hash hash = Hash.builder()
+                .type("test-type")
+                .value("test-value")
+                .build();
 
         assertEquals("test-type", hash.getType());
         assertEquals("test-value", hash.getValue());
@@ -48,8 +49,8 @@ final class ApplicationsTestUtil {
 
     static Map<String, Link> getLinks() {
         Map<String, Link> links = new HashMap<>();
-        links.put("test-link-1", new Link());
-        links.put("test-link-2", new Link());
+        links.put("test-link-1", Link.builder().build());
+        links.put("test-link-2", Link.builder().build());
         return links;
     }
 

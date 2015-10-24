@@ -84,9 +84,10 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/PUT_{id}_current_droplet_response.json"));
 
-        AssignApplicationDropletRequest request = new AssignApplicationDropletRequest()
-                .withDropletId("guid-3b5793e7-f6c8-40cb-a8d8-07080280da83")
-                .withId("test-id");
+        AssignApplicationDropletRequest request = AssignApplicationDropletRequest.builder()
+                .dropletId("guid-3b5793e7-f6c8-40cb-a8d8-07080280da83")
+                .id("test-id")
+                .build();
 
         AssignApplicationDropletResponse response = Streams.wrap(this.applications.assignDroplet(request)).next().get();
 
@@ -111,16 +112,17 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                         .errorResponse()
         );
 
-        AssignApplicationDropletRequest request = new AssignApplicationDropletRequest()
-                .withDropletId("guid-3b5793e7-f6c8-40cb-a8d8-07080280da83")
-                .withId("test-id");
+        AssignApplicationDropletRequest request = AssignApplicationDropletRequest.builder()
+                .dropletId("guid-3b5793e7-f6c8-40cb-a8d8-07080280da83")
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.assignDroplet(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void assignDropletInvalidRequest() {
-        Streams.wrap(this.applications.assignDroplet(new AssignApplicationDropletRequest())).next().get();
+        Streams.wrap(this.applications.assignDroplet(AssignApplicationDropletRequest.builder().build())).next().get();
     }
 
     @Test
@@ -131,11 +133,12 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(CREATED)
                 .responsePayload("v3/apps/POST_response.json"));
 
-        CreateApplicationRequest request = new CreateApplicationRequest()
-                .withName("my_app")
-                .withSpaceId("31627bdc-5bc4-4c4d-a883-c7b2f53db249")
-                .withEnvironmentVariable("open", "source")
-                .withBuildpack("name-410");
+        CreateApplicationRequest request = CreateApplicationRequest.builder()
+                .name("my_app")
+                .spaceId("31627bdc-5bc4-4c4d-a883-c7b2f53db249")
+                .environmentVariable("open", "source")
+                .buildpack("name-410")
+                .build();
 
         CreateApplicationResponse response = Streams.wrap(this.applications.create(request)).next().get();
 
@@ -158,18 +161,19 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .requestPayload("v3/apps/POST_request.json")
                 .errorResponse());
 
-        CreateApplicationRequest request = new CreateApplicationRequest()
-                .withName("my_app")
-                .withSpaceId("31627bdc-5bc4-4c4d-a883-c7b2f53db249")
-                .withEnvironmentVariable("open", "source")
-                .withBuildpack("name-410");
+        CreateApplicationRequest request = CreateApplicationRequest.builder()
+                .name("my_app")
+                .spaceId("31627bdc-5bc4-4c4d-a883-c7b2f53db249")
+                .environmentVariable("open", "source")
+                .buildpack("name-410")
+                .build();
 
         Streams.wrap(this.applications.create(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void createInvalidRequest() throws Throwable {
-        Streams.wrap(this.applications.create(new CreateApplicationRequest())).next().get();
+        Streams.wrap(this.applications.create(CreateApplicationRequest.builder().build())).next().get();
     }
 
     @Test
@@ -178,8 +182,9 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/apps/test-id")
                 .status(NO_CONTENT));
 
-        DeleteApplicationRequest request = new DeleteApplicationRequest()
-                .withId("test-id");
+        DeleteApplicationRequest request = DeleteApplicationRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.delete(request)).next().get();
 
@@ -192,15 +197,16 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/apps/test-id")
                 .errorResponse());
 
-        DeleteApplicationRequest request = new DeleteApplicationRequest()
-                .withId("test-id");
+        DeleteApplicationRequest request = DeleteApplicationRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.delete(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void deleteInvalidRequest() {
-        Streams.wrap(this.applications.delete(new DeleteApplicationRequest())).next().get();
+        Streams.wrap(this.applications.delete(DeleteApplicationRequest.builder().build())).next().get();
     }
 
     @Test
@@ -209,10 +215,11 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/apps/test-id/processes/test-type/instances/test-index")
                 .status(NO_CONTENT));
 
-        DeleteApplicationInstanceRequest request = new DeleteApplicationInstanceRequest()
-                .withId("test-id")
-                .withIndex("test-index")
-                .withType("test-type");
+        DeleteApplicationInstanceRequest request = DeleteApplicationInstanceRequest.builder()
+                .id("test-id")
+                .index("test-index")
+                .type("test-type")
+                .build();
 
         Streams.wrap(this.applications.deleteInstance(request)).next().get();
 
@@ -225,17 +232,18 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/apps/test-id/processes/test-type/instances/test-index")
                 .errorResponse());
 
-        DeleteApplicationInstanceRequest request = new DeleteApplicationInstanceRequest()
-                .withId("test-id")
-                .withIndex("test-index")
-                .withType("test-type");
+        DeleteApplicationInstanceRequest request = DeleteApplicationInstanceRequest.builder()
+                .id("test-id")
+                .index("test-index")
+                .type("test-type")
+                .build();
 
         Streams.wrap(this.applications.deleteInstance(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void deleteProcessInvalidRequest() {
-        Streams.wrap(this.applications.deleteInstance(new DeleteApplicationInstanceRequest())).next().get();
+        Streams.wrap(this.applications.deleteInstance(DeleteApplicationInstanceRequest.builder().build())).next().get();
     }
 
     @Test
@@ -245,8 +253,9 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/GET_{id}_response.json"));
 
-        GetApplicationRequest request = new GetApplicationRequest()
-                .withId("test-id");
+        GetApplicationRequest request = GetApplicationRequest.builder()
+                .id("test-id")
+                .build();
 
         GetApplicationResponse response = Streams.wrap(this.applications.get(request)).next().get();
 
@@ -269,15 +278,16 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(GET).path("/v3/apps/test-id")
                 .errorResponse());
 
-        GetApplicationRequest request = new GetApplicationRequest()
-                .withId("test-id");
+        GetApplicationRequest request = GetApplicationRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.get(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void getInvalidRequest() {
-        Streams.wrap(this.applications.get(new GetApplicationRequest())).next().get();
+        Streams.wrap(this.applications.get(GetApplicationRequest.builder().build())).next().get();
     }
 
     @Test
@@ -287,8 +297,9 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/GET_{id}_env_response.json"));
 
-        GetApplicationEnvironmentRequest request = new GetApplicationEnvironmentRequest()
-                .withId("test-id");
+        GetApplicationEnvironmentRequest request = GetApplicationEnvironmentRequest.builder()
+                .id("test-id")
+                .build();
 
         GetApplicationEnvironmentResponse response = Streams.wrap(this.applications.getEnvironment(request))
                 .next().get();
@@ -325,15 +336,16 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(GET).path("/v3/apps/test-id/env")
                 .errorResponse());
 
-        GetApplicationEnvironmentRequest request = new GetApplicationEnvironmentRequest()
-                .withId("test-id");
+        GetApplicationEnvironmentRequest request = GetApplicationEnvironmentRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.getEnvironment(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void getEnvironmentInvalidRequest() {
-        Streams.wrap(this.applications.getEnvironment(new GetApplicationEnvironmentRequest())).next().get();
+        Streams.wrap(this.applications.getEnvironment(GetApplicationEnvironmentRequest.builder().build())).next().get();
     }
 
     @Test
@@ -343,9 +355,10 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/GET_{id}_processes_{type}_response.json"));
 
-        GetApplicationProcessRequest request = new GetApplicationProcessRequest()
-                .withId("test-id")
-                .withType("web");
+        GetApplicationProcessRequest request = GetApplicationProcessRequest.builder()
+                .id("test-id")
+                .type("web")
+                .build();
 
         GetApplicationProcessResponse response = Streams.wrap(this.applications.getProcess(request))
                 .next().get();
@@ -368,16 +381,17 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(GET).path("/v3/apps/test-id/processes/web")
                 .errorResponse());
 
-        GetApplicationProcessRequest request = new GetApplicationProcessRequest()
-                .withId("test-id")
-                .withType("web");
+        GetApplicationProcessRequest request = GetApplicationProcessRequest.builder()
+                .id("test-id")
+                .type("web")
+                .build();
 
         Streams.wrap(this.applications.getProcess(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void getProcessInvalidRequest() {
-        Streams.wrap(this.applications.getProcess(new GetApplicationProcessRequest())).next().get();
+        Streams.wrap(this.applications.getProcess(GetApplicationProcessRequest.builder().build())).next().get();
     }
 
     @Test
@@ -387,10 +401,11 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/GET_response.json"));
 
-        ListApplicationsRequest request = new ListApplicationsRequest()
-                .withPage(1)
-                .withOrderBy(CREATED_AT)
-                .withName("test-name");
+        ListApplicationsRequest request = ListApplicationsRequest.builder()
+                .page(1)
+                .orderBy(CREATED_AT)
+                .name("test-name")
+                .build();
 
         ListApplicationsResponse response = Streams.wrap(this.applications.list(request)).next().get();
         ListApplicationsResponse.Resource resource = response.getResources().get(0);
@@ -413,17 +428,18 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(GET).path("/v3/apps?names[]=test-name&order_by=created_at&page=1")
                 .errorResponse());
 
-        ListApplicationsRequest request = new ListApplicationsRequest()
-                .withPage(1)
-                .withOrderBy(CREATED_AT)
-                .withName("test-name");
+        ListApplicationsRequest request = ListApplicationsRequest.builder()
+                .page(1)
+                .orderBy(CREATED_AT)
+                .name("test-name")
+                .build();
 
         Streams.wrap(this.applications.list(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void listInvalidRequest() {
-        Streams.wrap(this.applications.list(new ListApplicationsRequest().withPage(-1))).next().get();
+        Streams.wrap(this.applications.list(ListApplicationsRequest.builder().page(-1).build())).next().get();
     }
 
     @Test
@@ -434,9 +450,10 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                         .responsePayload("v3/apps/GET_{id}_packages_response.json")
         );
 
-        ListApplicationPackagesRequest request = new ListApplicationPackagesRequest()
-                .withPage(1)
-                .withId("test-id");
+        ListApplicationPackagesRequest request = ListApplicationPackagesRequest.builder()
+                .page(1)
+                .id("test-id")
+                .build();
 
         ListApplicationPackagesResponse response = Streams.wrap(this.applications.listPackages(request)).next().get();
         ListApplicationPackagesResponse.Resource resource = response.getResources().get(0);
@@ -460,15 +477,17 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(GET).path("/v3/apps/test-id/packages")
                 .errorResponse());
 
-        ListApplicationPackagesRequest request = new ListApplicationPackagesRequest()
-                .withPage(1)
-                .withId("test-id");
+        ListApplicationPackagesRequest request = ListApplicationPackagesRequest.builder()
+                .page(1)
+                .id("test-id")
+                .build();
+
         Streams.wrap(this.applications.listPackages(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void listPackagesInvalidRequest() {
-        Streams.wrap(this.applications.listPackages(new ListApplicationPackagesRequest())).next().get();
+        Streams.wrap(this.applications.listPackages(ListApplicationPackagesRequest.builder().build())).next().get();
     }
 
     @Test
@@ -478,13 +497,13 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/GET_{id}_droplets_response.json"));
 
-
-        ListApplicationDropletsRequest request = new ListApplicationDropletsRequest()
-                .withPage(1)
-                .withPerPage(2)
-                .withOrderBy(CREATED_AT)
-                .withOrderDirection(ASC)
-                .withId("test-id");
+        ListApplicationDropletsRequest request = ListApplicationDropletsRequest.builder()
+                .page(1)
+                .perPage(2)
+                .orderBy(CREATED_AT)
+                .orderDirection(ASC)
+                .id("test-id")
+                .build();
 
         ListApplicationDropletsResponse response = Streams.wrap(this.applications.listDroplets(request)).next().get();
         ListApplicationDropletsResponse.Resource resource = response.getResources().get(0);
@@ -512,19 +531,20 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(GET).path("/v3/apps/test-id/droplets?order_by=created_at&order_direction=asc&page=1&per_page=2")
                 .errorResponse());
 
-        ListApplicationDropletsRequest request = new ListApplicationDropletsRequest()
-                .withPage(1)
-                .withPerPage(2)
-                .withOrderBy(CREATED_AT)
-                .withOrderDirection(ASC)
-                .withId("test-id");
+        ListApplicationDropletsRequest request = ListApplicationDropletsRequest.builder()
+                .page(1)
+                .perPage(2)
+                .orderBy(CREATED_AT)
+                .orderDirection(ASC)
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.listDroplets(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void listDropletsInvalidRequest() {
-        Streams.wrap(this.applications.listDroplets(new ListApplicationDropletsRequest())).next().get();
+        Streams.wrap(this.applications.listDroplets(ListApplicationDropletsRequest.builder().build())).next().get();
     }
 
     @Test
@@ -534,9 +554,10 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/GET_{id}_processes_response.json"));
 
-        ListApplicationProcessesRequest request = new ListApplicationProcessesRequest()
-                .withPage(1)
-                .withId("test-id");
+        ListApplicationProcessesRequest request = ListApplicationProcessesRequest.builder()
+                .page(1)
+                .id("test-id")
+                .build();
 
         ListApplicationProcessesResponse response = Streams.wrap(this.applications.listProcesses(request)).next().get();
         ListApplicationProcessesResponse.Resource resource = response.getResources().get(0);
@@ -559,15 +580,17 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(GET).path("/v3/apps/test-id/processes")
                 .errorResponse());
 
-        ListApplicationProcessesRequest request = new ListApplicationProcessesRequest()
-                .withPage(1)
-                .withId("test-id");
+        ListApplicationProcessesRequest request = ListApplicationProcessesRequest.builder()
+                .page(1)
+                .id("test-id")
+                .build();
+
         Streams.wrap(this.applications.listProcesses(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void listProcessesInvalidRequest() {
-        Streams.wrap(this.applications.listProcesses(new ListApplicationProcessesRequest())).next().get();
+        Streams.wrap(this.applications.listProcesses(ListApplicationProcessesRequest.builder().build())).next().get();
     }
 
     @Test
@@ -577,8 +600,9 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/GET_{id}_routes_response.json"));
 
-        ListApplicationRoutesRequest request = new ListApplicationRoutesRequest()
-                .withId("test-id");
+        ListApplicationRoutesRequest request = ListApplicationRoutesRequest.builder()
+                .id("test-id")
+                .build();
 
         ListApplicationRoutesResponse response = Streams.wrap(this.applications.listRoutes(request)).next().get();
         ListApplicationRoutesResponse.Resource resource = response.getResources().get(0);
@@ -598,14 +622,15 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(GET).path("/v3/apps/test-id/routes")
                 .errorResponse());
 
-        ListApplicationRoutesRequest request = new ListApplicationRoutesRequest()
-                .withId("test-id");
+        ListApplicationRoutesRequest request = ListApplicationRoutesRequest.builder()
+                .id("test-id")
+                .build();
         Streams.wrap(this.applications.listRoutes(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void listRoutesInvalidRequest() {
-        Streams.wrap(this.applications.listRoutes(new ListApplicationRoutesRequest())).next().get();
+        Streams.wrap(this.applications.listRoutes(ListApplicationRoutesRequest.builder().build())).next().get();
     }
 
     @Test
@@ -615,9 +640,10 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .requestPayload("v3/apps/PUT_{id}_routes_request.json")
                 .status(NO_CONTENT));
 
-        MapApplicationRouteRequest request = new MapApplicationRouteRequest()
-                .withId("test-id")
-                .withRouteId("9cf0271a-420f-4ae4-b227-16683db93573");
+        MapApplicationRouteRequest request = MapApplicationRouteRequest.builder()
+                .id("test-id")
+                .routeId("9cf0271a-420f-4ae4-b227-16683db93573")
+                .build();
 
         Streams.wrap(this.applications.mapRoute(request)).next().get();
 
@@ -631,16 +657,17 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .requestPayload("v3/apps/PUT_{id}_routes_request.json")
                 .errorResponse());
 
-        MapApplicationRouteRequest request = new MapApplicationRouteRequest()
-                .withId("test-id")
-                .withRouteId("9cf0271a-420f-4ae4-b227-16683db93573");
+        MapApplicationRouteRequest request = MapApplicationRouteRequest.builder()
+                .id("test-id")
+                .routeId("9cf0271a-420f-4ae4-b227-16683db93573")
+                .build();
 
         Streams.wrap(this.applications.mapRoute(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void mapRouteInvalidRequest() {
-        Streams.wrap(this.applications.mapRoute(new MapApplicationRouteRequest())).next().get();
+        Streams.wrap(this.applications.mapRoute(MapApplicationRouteRequest.builder().build())).next().get();
     }
 
     @Test
@@ -651,12 +678,13 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/PUT_{id}_processes_{type}_scale_response.json"));
 
-        ScaleApplicationRequest request = new ScaleApplicationRequest()
-                .withDiskInMb(100)
-                .withId("test-id")
-                .withInstances(3)
-                .withMemoryInMb(100)
-                .withType("web");
+        ScaleApplicationRequest request = ScaleApplicationRequest.builder()
+                .diskInMb(100)
+                .id("test-id")
+                .instances(3)
+                .memoryInMb(100)
+                .type("web")
+                .build();
 
         ScaleApplicationResponse response = Streams.wrap(this.applications.scale(request)).next().get();
 
@@ -678,19 +706,20 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .requestPayload("v3/apps/PUT_{id}_processes_{type}_scale_request.json")
                 .errorResponse());
 
-        ScaleApplicationRequest request = new ScaleApplicationRequest()
-                .withDiskInMb(100)
-                .withId("test-id")
-                .withInstances(3)
-                .withMemoryInMb(100)
-                .withType("web");
+        ScaleApplicationRequest request = ScaleApplicationRequest.builder()
+                .diskInMb(100)
+                .id("test-id")
+                .instances(3)
+                .memoryInMb(100)
+                .type("web")
+                .build();
 
         Streams.wrap(this.applications.scale(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void scaleInvalidRequest() {
-        Streams.wrap(this.applications.scale(new ScaleApplicationRequest())).next().get();
+        Streams.wrap(this.applications.scale(ScaleApplicationRequest.builder().build())).next().get();
     }
 
     @Test
@@ -700,8 +729,9 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/PUT_{id}_start_response.json"));
 
-        StartApplicationRequest request = new StartApplicationRequest()
-                .withId("test-id");
+        StartApplicationRequest request = StartApplicationRequest.builder()
+                .id("test-id")
+                .build();
 
         StartApplicationResponse response = Streams.wrap(this.applications.start(request)).next().get();
 
@@ -724,15 +754,16 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(PUT).path("/v3/apps/test-id/start")
                 .errorResponse());
 
-        StartApplicationRequest request = new StartApplicationRequest()
-                .withId("test-id");
+        StartApplicationRequest request = StartApplicationRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.start(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void startInvalidRequest() {
-        Streams.wrap(this.applications.start(new StartApplicationRequest())).next().get();
+        Streams.wrap(this.applications.start(StartApplicationRequest.builder().build())).next().get();
     }
 
     @Test
@@ -742,8 +773,9 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/apps/PUT_{id}_stop_response.json"));
 
-        StopApplicationRequest request = new StopApplicationRequest()
-                .withId("test-id");
+        StopApplicationRequest request = StopApplicationRequest.builder()
+                .id("test-id")
+                .build();
 
         StopApplicationResponse response = Streams.wrap(this.applications.stop(request)).next().get();
 
@@ -766,15 +798,16 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .method(PUT).path("/v3/apps/test-id/stop")
                 .errorResponse());
 
-        StopApplicationRequest request = new StopApplicationRequest()
-                .withId("test-id");
+        StopApplicationRequest request = StopApplicationRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.stop(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void stopInvalidRequest() {
-        Streams.wrap(this.applications.stop(new StopApplicationRequest())).next().get();
+        Streams.wrap(this.applications.stop(StopApplicationRequest.builder().build())).next().get();
     }
 
     @Test
@@ -784,9 +817,10 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .requestPayload("v3/apps/DELETE_{id}_routes_request.json")
                 .status(NO_CONTENT));
 
-        UnmapApplicationRouteRequest request = new UnmapApplicationRouteRequest()
-                .withId("test-id")
-                .withRouteId("3f0121a8-54e1-45c0-8daf-44d0f8ba1091");
+        UnmapApplicationRouteRequest request = UnmapApplicationRouteRequest.builder()
+                .id("test-id")
+                .routeId("3f0121a8-54e1-45c0-8daf-44d0f8ba1091")
+                .build();
 
         Streams.wrap(this.applications.unmapRoute(request)).next().get();
 
@@ -800,16 +834,17 @@ public final class SpringApplicationsTest extends AbstractRestTest {
                 .requestPayload("v3/apps/DELETE_{id}_routes_request.json")
                 .errorResponse());
 
-        UnmapApplicationRouteRequest request = new UnmapApplicationRouteRequest()
-                .withId("test-id")
-                .withRouteId("3f0121a8-54e1-45c0-8daf-44d0f8ba1091");
+        UnmapApplicationRouteRequest request = UnmapApplicationRouteRequest.builder()
+                .id("test-id")
+                .routeId("3f0121a8-54e1-45c0-8daf-44d0f8ba1091")
+                .build();
 
         Streams.wrap(this.applications.unmapRoute(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void unmapRouteInvalidRequest() {
-        Streams.wrap(this.applications.unmapRoute(new UnmapApplicationRouteRequest())).next().get();
+        Streams.wrap(this.applications.unmapRoute(UnmapApplicationRouteRequest.builder().build())).next().get();
     }
 
     @Test
@@ -824,11 +859,12 @@ public final class SpringApplicationsTest extends AbstractRestTest {
         environment_variables.put("MY_ENV_VAR", "foobar");
         environment_variables.put("FOOBAR", "MY_ENV_VAR");
 
-        UpdateApplicationRequest request = new UpdateApplicationRequest()
-                .withName("new_name")
-                .withEnvironmentVariables(environment_variables)
-                .withBuildpack("http://gitwheel.org/my-app")
-                .withId("test-id");
+        UpdateApplicationRequest request = UpdateApplicationRequest.builder()
+                .name("new_name")
+                .environmentVariables(environment_variables)
+                .buildpack("http://gitwheel.org/my-app")
+                .id("test-id")
+                .build();
 
         UpdateApplicationResponse response = Streams.wrap(this.applications.update(request)).next().get();
 
@@ -855,18 +891,19 @@ public final class SpringApplicationsTest extends AbstractRestTest {
         environment_variables.put("MY_ENV_VAR", "foobar");
         environment_variables.put("FOOBAR", "MY_ENV_VAR");
 
-        UpdateApplicationRequest request = new UpdateApplicationRequest()
-                .withName("new_name")
-                .withEnvironmentVariables(environment_variables)
-                .withBuildpack("http://gitwheel.org/my-app")
-                .withId("test-id");
+        UpdateApplicationRequest request = UpdateApplicationRequest.builder()
+                .name("new_name")
+                .environmentVariables(environment_variables)
+                .buildpack("http://gitwheel.org/my-app")
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.applications.update(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void updateInvalidRequest() throws Throwable {
-        Streams.wrap(this.applications.update(new UpdateApplicationRequest())).next().get();
+        Streams.wrap(this.applications.update(UpdateApplicationRequest.builder().build())).next().get();
     }
 
 }

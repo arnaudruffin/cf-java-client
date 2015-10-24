@@ -28,16 +28,17 @@ import static org.junit.Assert.assertEquals;
 final class PackagesTestUtil {
 
     static <T extends Package<T>> void test(Package<T> response) {
-        Hash hash = new Hash()
-                .withType("test-type")
-                .withValue("test-value");
+        Hash hash = Hash.builder()
+                .type("test-type")
+                .value("test-value")
+                .build();
 
         assertEquals("test-type", hash.getType());
         assertEquals("test-value", hash.getValue());
 
         Map<String, Link> links = new HashMap<>();
-        links.put("test-link-1", new Link());
-        links.put("test-link-2", new Link());
+        links.put("test-link-1", Link.builder().build());
+        links.put("test-link-2", Link.builder().build());
 
         response.withCreatedAt("test-created-at")
                 .withError("test-error")

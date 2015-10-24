@@ -50,9 +50,10 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/processes/test-id/instances/test-index")
                 .status(NO_CONTENT));
 
-        DeleteProcessInstanceRequest request = new DeleteProcessInstanceRequest()
-                .withId("test-id")
-                .withIndex("test-index");
+        DeleteProcessInstanceRequest request = DeleteProcessInstanceRequest.builder()
+                .id("test-id")
+                .index("test-index")
+                .build();
 
         Streams.wrap(this.processes.deleteInstance(request)).next().get();
 
@@ -65,16 +66,17 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .method(DELETE).path("/v3/processes/test-id/instances/test-index")
                 .errorResponse());
 
-        DeleteProcessInstanceRequest request = new DeleteProcessInstanceRequest()
-                .withId("test-id")
-                .withIndex("test-index");
+        DeleteProcessInstanceRequest request = DeleteProcessInstanceRequest.builder()
+                .id("test-id")
+                .index("test-index")
+                .build();
 
         Streams.wrap(this.processes.deleteInstance(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void deleteInstanceInvalidRequest() {
-        Streams.wrap(this.processes.deleteInstance(new DeleteProcessInstanceRequest())).next().get();
+        Streams.wrap(this.processes.deleteInstance(DeleteProcessInstanceRequest.builder().build())).next().get();
     }
 
     @Test
@@ -84,8 +86,9 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/processes/GET_{id}_response.json"));
 
-        GetProcessRequest request = new GetProcessRequest()
-                .withId("test-id");
+        GetProcessRequest request = GetProcessRequest.builder()
+                .id("test-id")
+                .build();
 
         GetProcessResponse response = Streams.wrap(this.processes.get(request))
                 .next().get();
@@ -108,15 +111,16 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .method(GET).path("/v3/processes/test-id")
                 .errorResponse());
 
-        GetProcessRequest request = new GetProcessRequest()
-                .withId("test-id");
+        GetProcessRequest request = GetProcessRequest.builder()
+                .id("test-id")
+                .build();
 
         Streams.wrap(this.processes.get(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void getInvalidRequest() {
-        Streams.wrap(this.processes.get(new GetProcessRequest())).next().get();
+        Streams.wrap(this.processes.get(GetProcessRequest.builder().build())).next().get();
     }
 
     @Test
@@ -126,9 +130,10 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/processes/GET_response.json"));
 
-        ListProcessesRequest request = new ListProcessesRequest()
-                .withPage(1)
-                .withPerPage(2);
+        ListProcessesRequest request = ListProcessesRequest.builder()
+                .page(1)
+                .perPage(2)
+                .build();
 
         ListProcessesResponse response = Streams.wrap(this.processes.list(request)).next().get();
 
@@ -152,16 +157,17 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .method(GET).path("/v3/processes?page=1&per_page=2")
                 .errorResponse());
 
-        ListProcessesRequest request = new ListProcessesRequest()
-                .withPage(1)
-                .withPerPage(2);
+        ListProcessesRequest request = ListProcessesRequest.builder()
+                .page(1)
+                .perPage(2)
+                .build();
 
         Streams.wrap(this.processes.list(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void listInvalidRequest() {
-        Streams.wrap(this.processes.list(new ListProcessesRequest().withPage(0))).next().get();
+        Streams.wrap(this.processes.list(ListProcessesRequest.builder().page(0).build())).next().get();
     }
 
     @Test
@@ -172,11 +178,12 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/processes/PUT_{id}_scale_response.json"));
 
-        ScaleProcessRequest request = new ScaleProcessRequest()
-                .withDiskInMb(100)
-                .withId("test-id")
-                .withInstances(3)
-                .withMemoryInMb(100);
+        ScaleProcessRequest request = ScaleProcessRequest.builder()
+                .diskInMb(100)
+                .id("test-id")
+                .instances(3)
+                .memoryInMb(100)
+                .build();
 
         ScaleProcessResponse response = Streams.wrap(this.processes.scale(request)).next().get();
 
@@ -198,18 +205,19 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .requestPayload("v3/processes/PUT_{id}_scale_request.json")
                 .errorResponse());
 
-        ScaleProcessRequest request = new ScaleProcessRequest()
-                .withDiskInMb(100)
-                .withId("test-id")
-                .withInstances(3)
-                .withMemoryInMb(100);
+        ScaleProcessRequest request = ScaleProcessRequest.builder()
+                .diskInMb(100)
+                .id("test-id")
+                .instances(3)
+                .memoryInMb(100)
+                .build();
 
         Streams.wrap(this.processes.scale(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void scaleInvalidRequest() {
-        Streams.wrap(this.processes.scale(new ScaleProcessRequest())).next().get();
+        Streams.wrap(this.processes.scale(ScaleProcessRequest.builder().build())).next().get();
     }
 
     @Test
@@ -220,9 +228,10 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .status(OK)
                 .responsePayload("v3/processes/PATCH_{id}_response.json"));
 
-        UpdateProcessRequest request = new UpdateProcessRequest()
-                .withId("test-id")
-                .withCommand("test-command");
+        UpdateProcessRequest request = UpdateProcessRequest.builder()
+                .id("test-id")
+                .command("test-command")
+                .build();
 
         UpdateProcessResponse response = Streams.wrap(this.processes.update(request))
                 .next().get();
@@ -246,16 +255,17 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .requestPayload("v3/processes/PATCH_{id}_request.json")
                 .errorResponse());
 
-        UpdateProcessRequest request = new UpdateProcessRequest()
-                .withId("test-id")
-                .withCommand("test-command");
+        UpdateProcessRequest request = UpdateProcessRequest.builder()
+                .id("test-id")
+                .command("test-command")
+                .build();
 
         Streams.wrap(this.processes.update(request)).next().get();
     }
 
     @Test(expected = RequestValidationException.class)
     public void updateInvalidRequest() {
-        Streams.wrap(this.processes.update(new UpdateProcessRequest())).next().get();
+        Streams.wrap(this.processes.update(UpdateProcessRequest.builder().build())).next().get();
     }
 
 }

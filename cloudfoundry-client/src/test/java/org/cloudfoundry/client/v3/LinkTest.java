@@ -16,7 +16,6 @@
 
 package org.cloudfoundry.client.v3;
 
-import org.cloudfoundry.client.ValidationResult;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -24,25 +23,11 @@ import static org.junit.Assert.assertEquals;
 public final class LinkTest {
 
     @Test
-    public void test() {
-        Link link = new Link()
-                .withHref("test-href")
-                .withMethod("test-method");
+    public void defaultMethod() {
+        Link link = Link.builder()
+                .build();
 
-        assertEquals("test-href", link.getHref());
-        assertEquals("test-method", link.getMethod());
-    }
-
-    @Test
-    public void isValid() {
-        ValidationResult result1 = new Link().withMethod(null).isValid();
-        assertEquals(ValidationResult.Status.INVALID, result1.getStatus());
-        assertEquals(2, result1.getMessages().size());
-
-        ValidationResult result2 = new Link()
-                .withHref("test-href")
-                .withMethod("test-method").isValid();
-        assertEquals(ValidationResult.Status.VALID, result2.getStatus());
+        assertEquals("GET", link.getMethod());
     }
 
 }
