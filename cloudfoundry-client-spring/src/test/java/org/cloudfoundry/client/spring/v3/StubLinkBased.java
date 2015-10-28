@@ -17,7 +17,6 @@
 package org.cloudfoundry.client.spring.v3;
 
 import org.cloudfoundry.client.v3.Link;
-import org.cloudfoundry.client.v3.LinkBased;
 
 import java.util.Collections;
 import java.util.Map;

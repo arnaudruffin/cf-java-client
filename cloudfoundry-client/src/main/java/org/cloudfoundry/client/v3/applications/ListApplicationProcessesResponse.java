@@ -27,11 +27,18 @@ import org.cloudfoundry.client.v3.processes.Process;
 public final class ListApplicationProcessesResponse extends PaginatedResponse<ListApplicationProcessesResponse,
         ListApplicationProcessesResponse.Resource> {
 
+    public ListApplicationProcessesResponse() {
+        super(pagination, resources);
+    }
+
     /**
      * The Resource response payload for the List Application Processes operation
      *
      * <p><b>This class is NOT threadsafe.</b>
      */
     public static final class Resource extends Process<Resource> {
+        public Resource() {
+            super(createdAt, command, diskInMb, id, links, instances, memoryInMb, type, updatedAt);
+        }
     }
 }

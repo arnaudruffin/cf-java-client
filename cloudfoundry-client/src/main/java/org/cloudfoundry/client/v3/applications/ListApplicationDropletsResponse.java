@@ -27,11 +27,18 @@ import org.cloudfoundry.client.v3.droplets.Droplet;
 public final class ListApplicationDropletsResponse extends PaginatedResponse<ListApplicationDropletsResponse,
         ListApplicationDropletsResponse.Resource> {
 
+    public ListApplicationDropletsResponse() {
+        super(pagination, resources);
+    }
+
     /**
      * The Resource response payload for the List Application Droplets operation
      *
      * <p><b>This class is NOT threadsafe.</b>
      */
     public static final class Resource extends Droplet<Resource> {
+        public Resource() {
+            super(buildpack, createdAt, environmentVariables, error, hash, id, links, procfile, state, updatedAt);
+        }
     }
 }

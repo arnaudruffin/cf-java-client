@@ -33,7 +33,7 @@ public final class PaginatedResponseTest {
         Link next = Link.builder().build();
         Link previous = Link.builder().build();
 
-        Pagination pagination = new Pagination()
+        Pagination pagination = new Pagination(first, last, next, previous, totalResults)
                 .withFirst(first)
                 .withLast(last)
                 .withNext(next)
@@ -56,6 +56,9 @@ public final class PaginatedResponseTest {
     }
 
     private static final class StubPaginatedResponse extends PaginatedResponse<StubPaginatedResponse, String> {
+        private StubPaginatedResponse() {
+            super(pagination, resources);
+        }
     }
 
 }

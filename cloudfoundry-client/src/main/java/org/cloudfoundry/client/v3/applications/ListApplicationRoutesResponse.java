@@ -18,7 +18,6 @@ package org.cloudfoundry.client.v3.applications;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.cloudfoundry.client.v3.Link;
-import org.cloudfoundry.client.v3.LinkBased;
 import org.cloudfoundry.client.v3.PaginatedResponse;
 
 import java.util.HashMap;
@@ -31,6 +30,10 @@ import java.util.Map;
  */
 public final class ListApplicationRoutesResponse extends PaginatedResponse<ListApplicationRoutesResponse,
         ListApplicationRoutesResponse.Resource> {
+
+    public ListApplicationRoutesResponse() {
+        super(pagination, resources);
+    }
 
     /**
      * The Resource response payload for the List Application Routes operation

@@ -27,6 +27,10 @@ import org.cloudfoundry.client.v3.packages.Package;
 public final class ListApplicationPackagesResponse extends PaginatedResponse<ListApplicationPackagesResponse,
         ListApplicationPackagesResponse.Resource> {
 
+    public ListApplicationPackagesResponse() {
+        super(pagination, resources);
+    }
+
     /**
      * The Resource response payload for the List Application Packages operation
      *

@@ -25,4 +25,7 @@ import org.cloudfoundry.client.v3.processes.Process;
  */
 public final class ScaleApplicationResponse extends Process<ScaleApplicationResponse> {
 
+    public ScaleApplicationResponse() {
+        super(createdAt, command, diskInMb, id, links, instances, memoryInMb, type, updatedAt);
+    }
 }

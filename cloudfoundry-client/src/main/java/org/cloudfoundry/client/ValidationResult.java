@@ -24,6 +24,7 @@ import java.util.List;
  *
  * <p><b>This class is NOT threadsafe</b>
  */
+// TODO: Refactor to builder
 public final class ValidationResult {
 
     private volatile Status status = Status.VALID;

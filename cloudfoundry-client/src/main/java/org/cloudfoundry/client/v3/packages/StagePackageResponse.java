@@ -24,4 +24,7 @@ import org.cloudfoundry.client.v3.droplets.Droplet;
  * <p><b>This class is NOT threadsafe.</b>
  */
 public final class StagePackageResponse extends Droplet<StagePackageResponse> {
+    public StagePackageResponse() {
+        super(buildpack, createdAt, environmentVariables, error, hash, id, links, procfile, state, updatedAt);
+    }
 }
