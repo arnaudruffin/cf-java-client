@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.cloudfoundry.client.v3.droplets;
+package org.cloudfoundry.client.v3.packages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -25,18 +25,10 @@ import org.cloudfoundry.client.v3.Link;
 import java.util.Map;
 
 /**
- * Base class for responses that are droplets
+ * Base class for responses that are packages
  */
 @Data
-public abstract class Droplet {
-
-    /**
-     * The buildpack
-     *
-     * @param buildpack the buildpack
-     * @return the buildpack
-     */
-    private final String buildpack;
+public abstract class Package {
 
     /**
      * The created at
@@ -45,14 +37,6 @@ public abstract class Droplet {
      * @return the created at
      */
     private final String createdAt;
-
-    /**
-     * The environment variables
-     *
-     * @param environmentVariables the environment variables
-     * @return the environment variables
-     */
-    private final Map<String, Object> environmentVariables;
 
     /**
      * The error
@@ -74,7 +58,7 @@ public abstract class Droplet {
      * The id
      *
      * @param id the id
-     * @return id
+     * @return the id
      */
     private final String id;
 
@@ -82,17 +66,9 @@ public abstract class Droplet {
      * The links
      *
      * @param links the links
-     * @return links
+     * @return the links
      */
     private final Map<String, Link> links;
-
-    /**
-     * The procfile
-     *
-     * @param procfile the procfile
-     * @return the procfile
-     */
-    private final String procfile;
 
     /**
      * The state
@@ -103,6 +79,14 @@ public abstract class Droplet {
     private final String state;
 
     /**
+     * The type
+     *
+     * @param type the type
+     * @return the type
+     */
+    private final String type;
+
+    /**
      * The updated at
      *
      * @param updatedAt the updated at
@@ -110,26 +94,32 @@ public abstract class Droplet {
      */
     private final String updatedAt;
 
-    protected Droplet(@JsonProperty("buildpack") String buildpack,
-                      @JsonProperty("created_at") String createdAt,
-                      @JsonProperty("environment_variables") @Singular Map<String, Object> environmentVariables,
+    /**
+     * The url
+     *
+     * @param url the url
+     * @return the url
+     */
+    private final String url;
+
+    protected Package(@JsonProperty("created_at") String createdAt,
                       @JsonProperty("error") String error,
                       @JsonProperty("hash") Hash hash,
                       @JsonProperty("guid") String id,
                       @JsonProperty("_links") @Singular Map<String, Link> links,
-                      @JsonProperty("procfile") String procfile,
                       @JsonProperty("state") String state,
-                      @JsonProperty("updated_at") String updatedAt) {
-        this.buildpack = buildpack;
+                      @JsonProperty("type") String type,
+                      @JsonProperty("updated_at") String updatedAt,
+                      @JsonProperty("url") String url) {
         this.createdAt = createdAt;
-        this.environmentVariables = environmentVariables;
         this.error = error;
         this.hash = hash;
         this.id = id;
         this.links = links;
-        this.procfile = procfile;
         this.state = state;
+        this.type = type;
         this.updatedAt = updatedAt;
+        this.url = url;
     }
 
 }
