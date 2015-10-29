@@ -19,6 +19,8 @@ package org.cloudfoundry.client.spring.v3.packages;
 import org.cloudfoundry.client.RequestValidationException;
 import org.cloudfoundry.client.spring.AbstractRestTest;
 import org.cloudfoundry.client.v2.CloudFoundryException;
+import org.cloudfoundry.client.v3.Hash;
+import org.cloudfoundry.client.v3.Link;
 import org.cloudfoundry.client.v3.packages.CopyPackageRequest;
 import org.cloudfoundry.client.v3.packages.CopyPackageResponse;
 import org.cloudfoundry.client.v3.packages.CreatePackageRequest;
@@ -67,18 +69,26 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .sourcePackageId("test-source-package-id")
                 .build();
 
-        CopyPackageResponse response = Streams.wrap(this.packages.copy(request)).next().get();
+        CopyPackageResponse expected = CopyPackageResponse.builder()
+                .id("126e54c4-811d-4f7a-9a34-804130a75ab2")
+                .type("docker")
+                .hash(Hash.builder()
+                        .type("sha1")
+                        .build())
+                .url("docker://cloudfoundry/runtime-ci")
+                .state("READY")
+                .createdAt("2015-08-06T00:36:55Z")
+                .link("self", Link.builder()
+                        .href("/v3/packages/126e54c4-811d-4f7a-9a34-804130a75ab2")
+                        .build())
+                .link("app", Link.builder()
+                        .href("/v3/apps/guid-f8e68f3f-663d-478d-98ff-5d554910fde0")
+                        .build())
+                .build();
 
-        assertEquals("2015-08-06T00:36:55Z", response.getCreatedAt());
-        assertNull(response.getError());
-        assertEquals("sha1", response.getHash().getType());
-        assertNull(response.getHash().getValue());
-        assertEquals("126e54c4-811d-4f7a-9a34-804130a75ab2", response.getId());
-        assertEquals("READY", response.getState());
-        assertEquals("docker", response.getType());
-        assertNull(response.getUpdatedAt());
-        assertEquals("docker://cloudfoundry/runtime-ci", response.getUrl());
-        validateLinks(response, "self", "app");
+        CopyPackageResponse actual = Streams.wrap(this.packages.copy(request)).next().get();
+
+        assertEquals(expected, actual);
         verify();
     }
 
@@ -98,7 +108,10 @@ public final class SpringPackagesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void copyInvalidRequest() {
-        Streams.wrap(this.packages.copy(CopyPackageRequest.builder().build())).next().get();
+        CopyPackageRequest request = CopyPackageRequest.builder()
+                .build();
+
+        Streams.wrap(this.packages.copy(request)).next().get();
     }
 
     @Test
@@ -115,18 +128,26 @@ public final class SpringPackagesTest extends AbstractRestTest {
                 .url("docker://cloudfoundry/runtime-ci")
                 .build();
 
-        CreatePackageResponse response = Streams.wrap(this.packages.create(request)).next().get();
+        CreatePackageResponse expected = CreatePackageResponse.builder()
+                .id("126e54c4-811d-4f7a-9a34-804130a75ab2")
+                .type("docker")
+                .hash(Hash.builder()
+                        .type("sha1")
+                        .build())
+                .url("docker://cloudfoundry/runtime-ci")
+                .state("READY")
+                .createdAt("2015-08-06T00:36:55Z")
+                .link("self", Link.builder()
+                        .href("/v3/packages/126e54c4-811d-4f7a-9a34-804130a75ab2")
+                        .build())
+                .link("app", Link.builder()
+                        .href("/v3/apps/guid-f8e68f3f-663d-478d-98ff-5d554910fde0")
+                        .build())
+                .build();
 
-        assertEquals("2015-08-06T00:36:55Z", response.getCreatedAt());
-        assertNull(response.getError());
-        assertEquals("sha1", response.getHash().getType());
-        assertNull(response.getHash().getValue());
-        assertEquals("126e54c4-811d-4f7a-9a34-804130a75ab2", response.getId());
-        assertEquals("READY", response.getState());
-        assertEquals("docker", response.getType());
-        assertNull(response.getUpdatedAt());
-        assertEquals("docker://cloudfoundry/runtime-ci", response.getUrl());
-        validateLinks(response, "self", "app");
+        CreatePackageResponse actual = Streams.wrap(this.packages.create(request)).next().get();
+
+        assertEquals(expected, actual);
         verify();
     }
 
@@ -148,7 +169,10 @@ public final class SpringPackagesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void createInvalidRequest() {
-        Streams.wrap(this.packages.create(CreatePackageRequest.builder().build())).next().get();
+        CreatePackageRequest request = CreatePackageRequest.builder()
+                .build();
+
+        Streams.wrap(this.packages.create(request)).next().get();
     }
 
     @Test
@@ -181,7 +205,10 @@ public final class SpringPackagesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void deleteInvalidRequest() {
-        Streams.wrap(this.packages.delete(DeletePackageRequest.builder().build())).next().get();
+        DeletePackageRequest request = DeletePackageRequest.builder()
+                .build();
+
+        Streams.wrap(this.packages.delete(request)).next().get();
     }
 
     @Test
@@ -237,6 +264,7 @@ public final class SpringPackagesTest extends AbstractRestTest {
 
         ListPackagesRequest request = ListPackagesRequest.builder()
                 .build();
+
         ListPackagesResponse response = Streams.wrap(this.packages.list(request)).next().get();
 
         ListPackagesResponse.Resource resource = response.getResources().get(0);
@@ -268,7 +296,10 @@ public final class SpringPackagesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void listInvalidRequest() {
-        Streams.wrap(this.packages.list(ListPackagesRequest.builder().page(0).build())).next().get();
+        ListPackagesRequest request = ListPackagesRequest.builder()
+                .build();
+
+        Streams.wrap(this.packages.list(request)).next().get();
     }
 
     @Test
@@ -321,7 +352,10 @@ public final class SpringPackagesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void stageInvalidRequest() {
-        Streams.wrap(this.packages.stage(StagePackageRequest.builder().build())).next().get();
+        StagePackageRequest request = StagePackageRequest.builder()
+                .build();
+
+        Streams.wrap(this.packages.stage(request)).next().get();
     }
 
     @Test
@@ -371,7 +405,10 @@ public final class SpringPackagesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void uploadInvalidRequest() {
-        Streams.wrap(this.packages.upload(UploadPackageRequest.builder().build())).next().get();
+        UploadPackageRequest request = UploadPackageRequest.builder()
+                .build();
+
+        Streams.wrap(this.packages.upload(request)).next().get();
     }
 
 }

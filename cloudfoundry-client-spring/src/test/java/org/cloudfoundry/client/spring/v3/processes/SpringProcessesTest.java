@@ -19,6 +19,7 @@ package org.cloudfoundry.client.spring.v3.processes;
 import org.cloudfoundry.client.RequestValidationException;
 import org.cloudfoundry.client.spring.AbstractRestTest;
 import org.cloudfoundry.client.v2.CloudFoundryException;
+import org.cloudfoundry.client.v3.Link;
 import org.cloudfoundry.client.v3.processes.DeleteProcessInstanceRequest;
 import org.cloudfoundry.client.v3.processes.GetProcessRequest;
 import org.cloudfoundry.client.v3.processes.GetProcessResponse;
@@ -31,8 +32,10 @@ import org.cloudfoundry.client.v3.processes.UpdateProcessResponse;
 import org.junit.Test;
 import reactor.rx.Streams;
 
+import static org.cloudfoundry.client.v3.PaginatedResponse.Pagination;
+import static org.cloudfoundry.client.v3.processes.ListProcessesResponse.Resource;
+import static org.cloudfoundry.client.v3.processes.ListProcessesResponse.builder;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PATCH;
@@ -76,7 +79,10 @@ public final class SpringProcessesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void deleteInstanceInvalidRequest() {
-        Streams.wrap(this.processes.deleteInstance(DeleteProcessInstanceRequest.builder().build())).next().get();
+        DeleteProcessInstanceRequest request = DeleteProcessInstanceRequest.builder()
+                .build();
+
+        Streams.wrap(this.processes.deleteInstance(request)).next().get();
     }
 
     @Test
@@ -90,18 +96,32 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .id("test-id")
                 .build();
 
-        GetProcessResponse response = Streams.wrap(this.processes.get(request))
-                .next().get();
+        GetProcessResponse expected = GetProcessResponse.builder()
+                .id("07063514-b0ca-4e58-adbb-8e8bd7eebd64")
+                .type("web")
+                .instances(1)
+                .memoryInMb(1024)
+                .diskInMb(1024)
+                .createdAt("2015-07-27T22:43:31Z")
+                .updatedAt("2015-07-27T22:43:31Z")
+                .link("self", Link.builder()
+                        .href("/v3/processes/07063514-b0ca-4e58-adbb-8e8bd7eebd64")
+                        .build())
+                .link("self", Link.builder()
+                        .href("/v3/processes/07063514-b0ca-4e58-adbb-8e8bd7eebd64/scale")
+                        .method("PUT")
+                        .build())
+                .link("self", Link.builder()
+                        .href("/v3/apps/")
+                        .build())
+                .link("self", Link.builder()
+                        .href("/v2/spaces/a99fa535-dfa7-4edf-9b18-5cadc80acb0f")
+                        .build())
+                .build();
 
-        assertEquals("2015-07-27T22:43:31Z", response.getCreatedAt());
-        assertNull(response.getCommand());
-        assertEquals(Integer.valueOf(1024), response.getDiskInMb());
-        assertEquals("07063514-b0ca-4e58-adbb-8e8bd7eebd64", response.getId());
-        assertEquals(Integer.valueOf(1), response.getInstances());
-        assertEquals(Integer.valueOf(1024), response.getMemoryInMb());
-        assertEquals("web", response.getType());
-        assertEquals("2015-07-27T22:43:31Z", response.getUpdatedAt());
-        validateLinks(response, "self", "scale", "app", "space");
+        GetProcessResponse actual = Streams.wrap(this.processes.get(request)).next().get();
+
+        assertEquals(expected, actual);
         verify();
     }
 
@@ -120,7 +140,10 @@ public final class SpringProcessesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void getInvalidRequest() {
-        Streams.wrap(this.processes.get(GetProcessRequest.builder().build())).next().get();
+        GetProcessRequest request = GetProcessRequest.builder()
+                .build();
+
+        Streams.wrap(this.processes.get(request)).next().get();
     }
 
     @Test
@@ -135,19 +158,68 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .perPage(2)
                 .build();
 
-        ListProcessesResponse response = Streams.wrap(this.processes.list(request)).next().get();
+        ListProcessesResponse expected = builder()
+                .pagination(Pagination.builder()
+                        .totalResults(3)
+                        .first(Link.builder()
+                                .href("/v3/processes?page=1&per_page=2")
+                                .build())
+                        .last(Link.builder()
+                                .href("/v3/processes?page=2&per_page=2")
+                                .build())
+                        .next(Link.builder()
+                                .href("/v3/processes?page=2&per_page=2")
+                                .build())
+                        .build())
+                .resource(Resource.builder()
+                        .id("fdfa71c4-5e0e-4f68-adb6-82fc250cd233")
+                        .type("web")
+                        .instances(1)
+                        .memoryInMb(1024)
+                        .diskInMb(1024)
+                        .createdAt("2015-07-27T22:43:31Z")
+                        .updatedAt("2015-07-27T22:43:31Z")
+                        .link("self", Link.builder()
+                                .href("/v3/processes/fdfa71c4-5e0e-4f68-adb6-82fc250cd233")
+                                .build())
+                        .link("scale", Link.builder()
+                                .href("/v3/processes/fdfa71c4-5e0e-4f68-adb6-82fc250cd233/scale")
+                                .method("PUT")
+                                .build())
+                        .link("app", Link.builder()
+                                .href("/v3/apps/guid-e7b136ef-0e53-4421-a34e-f7d5bcc3508e")
+                                .build())
+                        .link("space", Link.builder()
+                                .href("/v2/spaces/176b0be5-f742-4db3-a0a2-6c178351052e")
+                                .build())
+                        .build())
+                .resource(Resource.builder()
+                        .id("491ef052-92a1-4c82-9cb9-7cf840a79eed")
+                        .type("web")
+                        .instances(1)
+                        .memoryInMb(1024)
+                        .diskInMb(1024)
+                        .createdAt("2015-07-27T22:43:31Z")
+                        .updatedAt("2015-07-27T22:43:31Z")
+                        .link("self", Link.builder()
+                                .href("/v3/processes/491ef052-92a1-4c82-9cb9-7cf840a79eed")
+                                .build())
+                        .link("scale", Link.builder()
+                                .href("/v3/processes/491ef052-92a1-4c82-9cb9-7cf840a79eed/scale")
+                                .method("PUT")
+                                .build())
+                        .link("app", Link.builder()
+                                .href("/v3/apps/")
+                                .build())
+                        .link("space", Link.builder()
+                                .href("/v2/spaces/176b0be5-f742-4db3-a0a2-6c178351052e")
+                                .build())
+                        .build())
+                .build();
 
-        ListProcessesResponse.Resource resource = response.getResources().get(0);
+        ListProcessesResponse actual = Streams.wrap(this.processes.list(request)).next().get();
 
-        assertEquals("2015-07-27T22:43:31Z", resource.getCreatedAt());
-        assertNull(resource.getCommand());
-        assertEquals(Integer.valueOf(1024), resource.getDiskInMb());
-        assertEquals("fdfa71c4-5e0e-4f68-adb6-82fc250cd233", resource.getId());
-        assertEquals(Integer.valueOf(1), resource.getInstances());
-        assertEquals(Integer.valueOf(1024), resource.getMemoryInMb());
-        assertEquals("web", resource.getType());
-        assertEquals("2015-07-27T22:43:31Z", resource.getUpdatedAt());
-        validateLinks(resource, "self", "scale", "app", "space");
+        assertEquals(expected, actual);
         verify();
     }
 
@@ -167,7 +239,10 @@ public final class SpringProcessesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void listInvalidRequest() {
-        Streams.wrap(this.processes.list(ListProcessesRequest.builder().page(0).build())).next().get();
+        ListProcessesRequest request = ListProcessesRequest.builder()
+                .build();
+
+        Streams.wrap(this.processes.list(request)).next().get();
     }
 
     @Test
@@ -185,16 +260,32 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .memoryInMb(100)
                 .build();
 
-        ScaleProcessResponse response = Streams.wrap(this.processes.scale(request)).next().get();
+        ScaleProcessResponse expected = ScaleProcessResponse.builder()
+                .id("1dbdf1dc-ec61-4ade-96bf-4e148092b2e8")
+                .type("web")
+                .instances(3)
+                .memoryInMb(100)
+                .diskInMb(100)
+                .createdAt("2015-07-27T22:43:31Z")
+                .updatedAt("2015-07-27T22:43:31Z")
+                .link("self", Link.builder()
+                        .href("/v3/processes/1dbdf1dc-ec61-4ade-96bf-4e148092b2e8")
+                        .build())
+                .link("scale", Link.builder()
+                        .href("/v3/processes/1dbdf1dc-ec61-4ade-96bf-4e148092b2e8/scale")
+                        .method("PUT")
+                        .build())
+                .link("app", Link.builder()
+                        .href("/v3/apps/guid-1ee4b2f6-a4b6-4125-97b6-0e7997e04643")
+                        .build())
+                .link("space", Link.builder()
+                        .href("/v2/spaces/bb0d102f-1218-48ee-bb04-377f2743d433")
+                        .build())
+                .build();
 
-        assertEquals("2015-07-27T22:43:31Z", response.getCreatedAt());
-        assertEquals(Integer.valueOf(100), response.getDiskInMb());
-        assertEquals("1dbdf1dc-ec61-4ade-96bf-4e148092b2e8", response.getId());
-        assertEquals(Integer.valueOf(3), response.getInstances());
-        assertEquals(Integer.valueOf(100), response.getMemoryInMb());
-        assertEquals("web", response.getType());
-        assertEquals("2015-07-27T22:43:32Z", response.getUpdatedAt());
-        validateLinks(response, "self", "scale", "app", "space");
+        ScaleProcessResponse actual = Streams.wrap(this.processes.scale(request)).next().get();
+
+        assertEquals(expected, actual);
         verify();
     }
 
@@ -217,7 +308,10 @@ public final class SpringProcessesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void scaleInvalidRequest() {
-        Streams.wrap(this.processes.scale(ScaleProcessRequest.builder().build())).next().get();
+        ScaleProcessRequest request = ScaleProcessRequest.builder()
+                .build();
+
+        Streams.wrap(this.processes.scale(request)).next().get();
     }
 
     @Test
@@ -233,18 +327,33 @@ public final class SpringProcessesTest extends AbstractRestTest {
                 .command("test-command")
                 .build();
 
-        UpdateProcessResponse response = Streams.wrap(this.processes.update(request))
-                .next().get();
+        UpdateProcessResponse expected = UpdateProcessResponse.builder()
+                .id("92d5b770-32ed-4f5c-8def-b1f2348447fb")
+                .type("web")
+                .command("X")
+                .instances(1)
+                .memoryInMb(1024)
+                .diskInMb(1024)
+                .createdAt("2015-07-27T22:43:32Z")
+                .updatedAt("2015-07-27T22:43:32Z")
+                .link("self", Link.builder()
+                        .href("/v3/processes/92d5b770-32ed-4f5c-8def-b1f2348447fb")
+                        .build())
+                .link("scale", Link.builder()
+                        .href("/v3/processes/92d5b770-32ed-4f5c-8def-b1f2348447fb/scale")
+                        .method("PUT")
+                        .build())
+                .link("app", Link.builder()
+                        .href("/v3/apps/")
+                        .build())
+                .link("space", Link.builder()
+                        .href("/v2/spaces/b7f8b3b1-3210-4151-a356-c26f31289064")
+                        .build())
+                .build();
 
-        assertEquals("2015-07-27T22:43:32Z", response.getCreatedAt());
-        assertEquals("X", response.getCommand());
-        assertEquals(Integer.valueOf(1024), response.getDiskInMb());
-        assertEquals("92d5b770-32ed-4f5c-8def-b1f2348447fb", response.getId());
-        assertEquals(Integer.valueOf(1), response.getInstances());
-        assertEquals(Integer.valueOf(1024), response.getMemoryInMb());
-        assertEquals("web", response.getType());
-        assertEquals("2015-07-27T22:43:32Z", response.getUpdatedAt());
-        validateLinks(response, "self", "scale", "app", "space");
+        UpdateProcessResponse actual = Streams.wrap(this.processes.update(request)).next().get();
+
+        assertEquals(expected, actual);
         verify();
     }
 
@@ -265,7 +374,10 @@ public final class SpringProcessesTest extends AbstractRestTest {
 
     @Test(expected = RequestValidationException.class)
     public void updateInvalidRequest() {
-        Streams.wrap(this.processes.update(UpdateProcessRequest.builder().build())).next().get();
+        UpdateProcessRequest request = UpdateProcessRequest.builder()
+                .build();
+
+        Streams.wrap(this.processes.update(request)).next().get();
     }
 
 }
