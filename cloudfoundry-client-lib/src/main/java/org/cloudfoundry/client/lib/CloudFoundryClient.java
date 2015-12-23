@@ -16,6 +16,15 @@
 
 package org.cloudfoundry.client.lib;
 
+import org.cloudfoundry.client.lib.archive.ApplicationArchive;
+import org.cloudfoundry.client.lib.domain.*;
+import org.cloudfoundry.client.lib.domain.CloudApplication.DebugMode;
+import org.cloudfoundry.client.lib.rest.CloudControllerClient;
+import org.cloudfoundry.client.lib.rest.CloudControllerClientFactory;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.util.Assert;
+import org.springframework.web.client.ResponseErrorHandler;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,34 +32,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import org.cloudfoundry.client.lib.archive.ApplicationArchive;
-import org.cloudfoundry.client.lib.domain.ApplicationLog;
-import org.cloudfoundry.client.lib.domain.ApplicationStats;
-import org.cloudfoundry.client.lib.domain.CloudApplication;
-import org.cloudfoundry.client.lib.domain.CloudApplication.DebugMode;
-import org.cloudfoundry.client.lib.domain.CloudSecurityGroup;
-import org.cloudfoundry.client.lib.domain.CloudDomain;
-import org.cloudfoundry.client.lib.domain.CloudEvent;
-import org.cloudfoundry.client.lib.domain.CloudInfo;
-import org.cloudfoundry.client.lib.domain.CloudOrganization;
-import org.cloudfoundry.client.lib.domain.CloudQuota;
-import org.cloudfoundry.client.lib.domain.CloudRoute;
-import org.cloudfoundry.client.lib.domain.CloudService;
-import org.cloudfoundry.client.lib.domain.CloudServiceBroker;
-import org.cloudfoundry.client.lib.domain.CloudServiceInstance;
-import org.cloudfoundry.client.lib.domain.CloudServiceOffering;
-import org.cloudfoundry.client.lib.domain.CloudSpace;
-import org.cloudfoundry.client.lib.domain.CloudStack;
-import org.cloudfoundry.client.lib.domain.CrashesInfo;
-import org.cloudfoundry.client.lib.domain.InstancesInfo;
-import org.cloudfoundry.client.lib.domain.Staging;
-import org.cloudfoundry.client.lib.domain.CloudUser;
-import org.cloudfoundry.client.lib.rest.CloudControllerClient;
-import org.cloudfoundry.client.lib.rest.CloudControllerClientFactory;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.util.Assert;
-import org.springframework.web.client.ResponseErrorHandler;
 
 /**
  * A Java client to exercise the Cloud Foundry API.
@@ -307,6 +288,10 @@ public class CloudFoundryClient implements CloudFoundryOperations {
 
 	public void stopApplication(String appName) {
 		cc.stopApplication(appName);
+	}
+
+	public void stopApplication(UUID appGuid) {
+		cc.stopApplication(appGuid);
 	}
 
 	public StartingInfo restartApplication(String appName) {
