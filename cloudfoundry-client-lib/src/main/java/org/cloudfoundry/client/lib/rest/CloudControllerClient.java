@@ -121,6 +121,8 @@ public interface CloudControllerClient {
 
 	StartingInfo startApplication(String appName);
 
+	StartingInfo startApplication(UUID appGuid);
+
 	void debugApplication(String appName, CloudApplication.DebugMode mode);
 
 	void stopApplication(String appName);
@@ -128,6 +130,8 @@ public interface CloudControllerClient {
 	void stopApplication(UUID appGuid);
 
 	StartingInfo restartApplication(String appName);
+
+	StartingInfo restartApplication(UUID appGuid);
 
 	void deleteApplication(String appName);
 

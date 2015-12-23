@@ -1451,6 +1451,38 @@ public class CloudControllerClientImpl implements CloudControllerClient {
 	}
 
 	@Override
+	public StartingInfo startApplication(UUID appGuid) {
+		HashMap<String, Object> appRequest = new HashMap<String, Object>();
+		appRequest.put("state", CloudApplication.AppState.STARTED);
+
+		HttpEntity<Object> requestEntity = new HttpEntity<Object>(
+				appRequest);
+		ResponseEntity<String> entity = getRestTemplate().exchange(
+				getUrl("/v2/apps/{guid}?stage_async=true"), HttpMethod.PUT, requestEntity,
+				String.class, appGuid);
+
+		HttpHeaders headers = entity.getHeaders();
+
+		// Return a starting info, even with a null staging log value, as a non-null starting info
+		// indicates that the response entity did have headers. The API contract is to return starting info
+		// if there are headers in the response, null otherwise.
+		if (headers != null && !headers.isEmpty()) {
+			String stagingFile = headers.getFirst("x-app-staging-log");
+
+			if (stagingFile != null) {
+				try {
+					stagingFile = URLDecoder.decode(stagingFile, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					logger.error("unexpected inability to UTF-8 decode", e);
+				}
+			}
+			// Return the starting info even if decoding failed or staging file is null
+			return new StartingInfo(stagingFile);
+		}
+		return null;
+	}
+
+	@Override
 	public void debugApplication(String appName, CloudApplication.DebugMode mode) {
 		throw new UnsupportedOperationException("Feature is not yet implemented.");
 	}
@@ -1477,6 +1509,12 @@ public class CloudControllerClientImpl implements CloudControllerClient {
 	public StartingInfo restartApplication(String appName) {
 		stopApplication(appName);
 		return startApplication(appName);
+	}
+
+	@Override
+	public StartingInfo restartApplication(UUID appGuid) {
+		stopApplication(appGuid);
+		return startApplication(appGuid);
 	}
 
 	@Override

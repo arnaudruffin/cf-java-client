@@ -282,6 +282,10 @@ public class CloudFoundryClient implements CloudFoundryOperations {
 		return cc.startApplication(appName);
 	}
 
+	public StartingInfo startApplication(UUID appGuid) {
+		return cc.startApplication(appGuid);
+	}
+
 	public void debugApplication(String appName, DebugMode mode) {
 		cc.debugApplication(appName, mode);
 	}
@@ -296,6 +300,10 @@ public class CloudFoundryClient implements CloudFoundryOperations {
 
 	public StartingInfo restartApplication(String appName) {
 		return cc.restartApplication(appName);
+	}
+
+	public StartingInfo restartApplication(UUID appGuid) {
+		return cc.restartApplication(appGuid);
 	}
 
 	public void deleteApplication(String appName) {
